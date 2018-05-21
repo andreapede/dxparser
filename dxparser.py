@@ -1,12 +1,14 @@
-import telnetlib
+import telnetlib  # for telnet communication
 import re
 import time
 
-server_ip = "192.168.1.25"  # dxcluster.iz0tws.com"
-password = ""
-user = "iz0twd"
+server_ip = "dxcluster.iz0tws.com"  # dxcluster.iz0tws.com"
+server_port = 7300  # port number of the cluster
+user = "iz0twd"  # callsign to register in the cluster
+password = ""  # if needed
+
 # Open connection to telnet
-tn = telnetlib.Telnet(host=server_ip, port=7300)
+tn = telnetlib.Telnet(host=server_ip, port=server_port)
 
 tn.read_until(b"login: ")
 
@@ -24,11 +26,11 @@ pattern = re.compile(
 # Parse telnet
 while (1):
     # Check new telnet info against regular expression
-    telnet_output = tn.read_until(b"\r\n",timeout=10)
+    telnet_output = tn.read_until(b"\r\n", timeout=10)
     print(time.localtime());
     print(telnet_output)
     match = pattern.match(telnet_output)
-    print (match)
+    print(match)
     # If there is a match, sort matches into variables
     if match:
         spotter = match.group(1)
@@ -36,5 +38,5 @@ while (1):
         spotted = match.group(3)
         comment = match.group(4).strip()
         spot_time = match.group(5)
-        #band = frequency_to_band(frequency)
-        print(spotter,frequency,spotted,comment,spot_time)
+        # band = frequency_to_band(frequency)
+        print(spotter, frequency, spotted, comment, spot_time)
